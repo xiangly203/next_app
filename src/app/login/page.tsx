@@ -1,0 +1,79 @@
+"use client"
+import React, { useState } from "react";
+import { Button, Input } from "@nextui-org/react";
+
+const App: React.FC = () => {
+    const [phone, setPhone] = useState("");
+    const [code, setCode] = useState("");
+
+    const handleGetCode = async () => {
+        if (!phone) {
+            alert("请输入手机号码");
+            return;
+        }
+
+        const response = await fetch("/local/getCode", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ phone }),
+        });
+
+        const data = await response.json();
+
+        if (data.status !== 123) {
+            alert(data.message);
+        }
+    };
+
+    const handleLogin = async () => {
+        if (!phone || !code) {
+            alert("请输入手机号码和验证码");
+            return;
+        }
+
+        const response = await fetch("/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ phone, code }),
+        });
+
+        const data = await response.json();
+
+        if (data.status !== 123) {
+            alert(data.message);
+        }
+    };
+
+    return (
+        <div>
+            <Input
+                type="text"
+                label="Phone"
+                placeholder="Enter your phone number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+            />
+            <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+                <Input
+                    type="text"
+                    label="Code"
+                    placeholder="Enter your code"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                />
+                <Button color="primary" onClick={handleGetCode}>
+                    获取验证码
+                </Button>
+            </div>
+            <Button color="primary" onClick={handleLogin}>
+                登录
+            </Button>
+        </div>
+    );
+};
+
+export default App;
