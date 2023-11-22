@@ -49,15 +49,16 @@ const App: React.FC = () => {
     };
 
     return (
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '20%', margin: 'auto', gap: '20px' }}>
             <Input
                 type="text"
                 label="Phone"
                 placeholder="Enter your phone number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                // style={{ marginBottom: '10px' }}
             />
-            <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+            <div className="flex w-full flex-wrap md:flex-nowrap gap-4" style={{ marginBottom: '10px', justifyContent: 'center', alignItems: 'center',}}>
                 <Input
                     type="text"
                     label="Code"
