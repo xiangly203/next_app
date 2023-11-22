@@ -7,7 +7,7 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
         <body>
         <Providers>
             {children}
-            <Analytics/>
+            {/*<Analytics/>*/}
         </Providers>
         </body>
         </html>
