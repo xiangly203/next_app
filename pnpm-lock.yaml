@@ -11,6 +11,9 @@ dependencies:
   '@nextui-org/switch':
     specifier: ^2.0.25
     version: 2.0.25(@nextui-org/system@2.0.15)(@nextui-org/theme@2.1.17)(react-dom@18.2.0)(react@18.2.0)
+  '@react-aria/ssr':
+    specifier: ^3.9.0
+    version: 3.9.0(react@18.2.0)
   '@react-aria/visually-hidden':
     specifier: ^3.8.7
     version: 3.8.7(react@18.2.0)
