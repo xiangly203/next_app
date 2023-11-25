@@ -9,8 +9,6 @@ import {
 } from "@nextui-org/react";
 import React, { useState } from "react";
 import { Link, Button} from "@nextui-org/react";
-import {NavbarBrand} from "@nextui-org/navbar";
-import {AcmeLogo} from "@/components/icons/Acmlogo";
 
 const Navbar: React.FC = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
