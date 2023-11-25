@@ -9,7 +9,6 @@ const App: React.FC = () => {
     const handleGetCode = async () => {
         if (!phone) {
             alert("请输入手机号码");
-            // return;
         }
 
         const response = await fetch("/api/getcode", {
@@ -22,7 +21,7 @@ const App: React.FC = () => {
 
         const data = await response.json();
 
-        if (data.status !== 123) {
+        if (data.status == "123") {
             alert(data.message);
         }
     };
@@ -43,9 +42,9 @@ const App: React.FC = () => {
 
         const data = await response.json();
 
-        if (data.status !== 123) {
+        // if (data.status == "123") {
             alert(data.message);
-        }
+        // }
     };
 
     return (
