@@ -1,5 +1,5 @@
-"use client"
-import React, { useState } from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import { Button, Input } from "@nextui-org/react";
 
 const App: React.FC = () => {
@@ -9,11 +9,10 @@ const App: React.FC = () => {
     const handleGetCode = async () => {
         if (!phone) {
             alert("请输入手机号码");
-            return;
         }
 
-        const response = await fetch("/local/getCode", {
-            method: "GET",
+        const response = await fetch("/api/getcode", {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -22,7 +21,7 @@ const App: React.FC = () => {
 
         const data = await response.json();
 
-        if (data.status !== 123) {
+        if (data.status == "123") {
             alert(data.message);
         }
     };
@@ -33,7 +32,7 @@ const App: React.FC = () => {
             return;
         }
 
-        const response = await fetch("/login", {
+        const response = await fetch("/api/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -43,9 +42,9 @@ const App: React.FC = () => {
 
         const data = await response.json();
 
-        if (data.status !== 123) {
+        // if (data.status == "123") {
             alert(data.message);
-        }
+        // }
     };
 
     return (

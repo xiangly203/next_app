@@ -1,25 +1,8 @@
-// app/page.tsx
-// "use client"
-// import React, { useState } from "react";
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem} from "@nextui-org/react";
-// import {AcmeLogo} from "./AcmeLogo";
+import React from "react";
+
 
 const App: React.FC = () => {
     // const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-
-    const menuItems: string[] = [
-        "Profile",
-        "Dashboard",
-        "Activity",
-        "Analytics",
-        "System",
-        "Deployments",
-        "My Settings",
-        "Team Settings",
-        "Help & Feedback",
-        "Log Out",
-    ];
-
     return (
 
       <div>
