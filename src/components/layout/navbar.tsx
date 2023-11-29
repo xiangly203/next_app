@@ -6,9 +6,10 @@ import {
 	NavbarMenuToggle,
 	NavbarItem,
 	NavbarMenuItem,
-} from "@nextui-org/react";
+} from "@nextui-org/navbar";
 import React, { useState } from "react";
-import { Link, Button} from "@nextui-org/react";
+import { Button} from "@nextui-org/button";
+import { Link} from "@nextui-org/link";
 
 const Navbar: React.FC = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
