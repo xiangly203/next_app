@@ -1,17 +1,17 @@
-"use client"
+"use client";
 import {Link} from "@nextui-org/link";
 import {Button} from "@nextui-org/button";
 import React from "react";
 import {signOut, useSession} from "next-auth/react";
 
 export default function Login_btm() {
-    const { data: session, status } = useSession()
-    const name = session?.user?.name
+    const { status } = useSession()
+    // const name = session?.user?.name
     if (status === "authenticated") {
         return (
             <>
                 <Link href={'/profile'} className="whitespace-nowrap">
-                    你好, {name}
+                    你好
                 </Link>
                 <Button as={Link} color="danger"
                         variant="flat"

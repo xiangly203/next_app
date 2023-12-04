@@ -2,7 +2,8 @@ import NextAuth, {DefaultSession} from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
 export const { handlers, auth } = NextAuth(
-    { providers: [
+    {
+        providers: [
             CredentialsProvider({
                     credentials: {
                         username: { label: "Username", type: "text" },
@@ -20,6 +21,7 @@ export const { handlers, auth } = NextAuth(
                     const data = authResponse.json()
                     if (authResponse.ok && data) {
                         console.log(data)
+                        // return data.token
                         return data
                     }
                    return null
@@ -27,11 +29,26 @@ export const { handlers, auth } = NextAuth(
                 }
             )
         ],
-        session: {
-            strategy :"jwt",
-        },
+        // session: {
+        //     strategy :"jwt",
+        // },
+        // callbacks:{
+            // async jwt({ token, user, account, profile, isNewUser }) {
+            //     if (user) {
+            //         token.id = user.id;
+            //     }
+            //     return token;
+            // },
+            // session: async ({ session, token, user }) => {
+            //     if (session?.user && token) {
+            //         session.user.id = token.id as string;
+            //     }
+            //     return session;
+            // },
+        // },
 
     }
+
 )
 
 // types/next-auth.d.ts
