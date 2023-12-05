@@ -1,8 +1,9 @@
 import NextAuth, {DefaultSession} from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-
+import jwt from "jsonwebtoken"
 // @ts-ignore
 export const { handlers, auth } = NextAuth(
+
     {
         providers: [
             CredentialsProvider({
@@ -61,6 +62,16 @@ export const { handlers, auth } = NextAuth(
             },
 
         },
+        // jwt: {
+        //     async encode({ secret, token }) {
+        //         // @ts-ignore
+        //         return jwt.sign(token, secret)
+        //     },
+        //     async decode({ secret, token }) {
+        //         // @ts-ignore
+        //         return jwt.verify(token, secret)
+        //     },
+        // },
 
     }
 
