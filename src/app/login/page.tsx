@@ -2,79 +2,115 @@
 import React, { useState, useEffect } from "react";
 import { Button} from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
+import { useForm, SubmitHandler } from "react-hook-form"
+import {signIn, useSession} from "next-auth/react";
+// import * as yup from "yup"
+type LoginForm = {
+    phone: string
+    code: string
+}
+export default function APP(){
+    const { data: session, status } = useSession()
+    const [isGetCode, setIsGetCode] = React.useState(false);
+    const [countDown, setCountDown] = React.useState(60);
 
-const App: React.FC = () => {
-    const [phone, setPhone] = useState("");
-    const [code, setCode] = useState("");
-
+    const {
+        register,
+        handleSubmit,
+        formState: {errors},
+        getValues
+    } = useForm<LoginForm>()
+    const onSubmit = async (data: LoginForm) => {
+            const phone = data.phone
+            const code = data.code
+            await signIn("credentials", {phone,code, callbackUrl: "/"})
+    }
     const handleGetCode = async () => {
-        if (!phone) {
-            alert("请输入手机号码");
-        }
-
-        const response = await fetch("/api/getcode", {
+        const phone = getValues("phone");
+        const res = await fetch("api-web/getCode", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ phone }),
+            body: JSON.stringify({"phone": phone}),
         });
-
-        const data = await response.json();
-
-        if (data.status == "123") {
-            alert(data.message);
+        if (res.ok){
+            const data = await res.json();
+            // if (data.status == "1") {
+            //     alert(data.message);
+            // }
+            setIsGetCode(true)
+            let timer = setInterval(() => {
+                setCountDown((prevCountDown) => {
+                    if (prevCountDown <= 1) {
+                        clearInterval(timer);
+                        setIsGetCode(false);
+                        return 60;
+                    } else {
+                        return prevCountDown - 1;
+                    }
+                });
+            }, 1000);
         }
+
     };
-
-    const handleLogin = async () => {
-        if (!phone || !code) {
-            alert("请输入手机号码和验证码");
-            return;
-        }
-
-        const response = await fetch("/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ phone, code }),
-        });
-
-        const data = await response.json();
-
-        // if (data.status == "123") {
-            alert(data.message);
-        // }
-    };
-
-    return (
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '20%', margin: 'auto', gap: '20px' }}>
-            <Input
-                type="text"
-                label="Phone"
-                placeholder="Enter your phone number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                // style={{ marginBottom: '10px' }}
-            />
-            <div className="flex w-full flex-wrap md:flex-nowrap gap-4" style={{ marginBottom: '10px', justifyContent: 'center', alignItems: 'center',}}>
+    if (status === "authenticated"){
+        return (
+            <div>不能重复登录</div>
+        )
+    }
+        return (
+            <form className="block mx-auto max-w-xs"
+                  onSubmit={handleSubmit(onSubmit)}>
                 <Input
+                    {...register("phone", {
+                        required: "请输入手机号",
+                        // pattern: {
+                        //     value: /^1\d{10}$/,
+                        //     message: "手机号码必须以1开头，总共有11位数字",
+                        // },
+                    })}
                     type="text"
-                    label="Code"
-                    placeholder="Enter your code"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
+                    label="手机号"
+                    variant="underlined"
+                    className="my-2"
                 />
-                <Button color="primary" onClick={handleGetCode}>
-                    获取验证码
-                </Button>
-            </div>
-            <Button color="primary" onClick={handleLogin}>
-                登录
-            </Button>
-        </div>
-    );
-};
+                {errors.phone?.type === "required" && (
+                    <p role="alert">请输入手机号</p>
+                )}
+                <Input
+                    {...register("code",
+                        {required: "请输入验证码",
+                            // pattern: {
+                            //     value: /^\d{6}$/,
+                            //     message: "验证码必须是6位数字",}
+                            })}
+                    type="text"
+                    label="验证码"
+                    variant="underlined"
+                    className="my-2"
+                    endContent={isGetCode ?
+                        <Button
+                            radius="sm"
+                            color="primary"
+                        >{countDown} S</Button> :
+                        <Button color="primary"
+                                radius="sm"
+                            onClick={handleGetCode}>
+                        获取验证码
+                        </Button>
 
-export default App;
+                    }
+                />
+                {errors.code?.type === "required" && (
+                    <p role="alert">请输入验证码</p>
+                )}
+                <Button color="primary"
+                        radius="sm"
+                        type="submit"
+                        className="w-full mt-2">
+                    登录
+                </Button>
+            </form>
+        );
+};

@@ -1,4 +1,4 @@
-import "@/styles/globals.css"
+import "./globals.css"
 import { Metadata } from "next";
 import { siteConfig } from "../../config/site";
 import { fontSans } from "../../config/fonts";
@@ -23,9 +23,7 @@ export const metadata: Metadata = {
     },
 };
 
-export default function RootLayout({
-                                       children,
-                                   }: {
+export default function RootLayout({children,}: {
     children: React.ReactNode;
 }) {
     return (
@@ -36,7 +34,7 @@ export default function RootLayout({
                 fontSans.variable
             )}
         >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
             <div className="relative flex flex-col h-screen">
                 <Navbar />
                 <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
