@@ -21,7 +21,9 @@ export default function APP(){
         getValues
     } = useForm<LoginForm>()
     const onSubmit = async (data: LoginForm) => {
-        await signIn("credentials", {data, callbackUrl: "/"})
+            const phone = data.phone
+            const code = data.code
+            await signIn("credentials", {phone,code, callbackUrl: "/"})
     }
     const handleGetCode = async () => {
         const phone = getValues("phone");
@@ -106,7 +108,7 @@ export default function APP(){
                 <Button color="primary"
                         radius="sm"
                         type="submit"
-                        className="w-full">
+                        className="w-full mt-2">
                     登录
                 </Button>
             </form>

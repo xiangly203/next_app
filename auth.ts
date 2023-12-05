@@ -1,16 +1,16 @@
 import NextAuth, {DefaultSession} from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
+// @ts-ignore
 export const { handlers, auth } = NextAuth(
     {
         providers: [
             CredentialsProvider({
                     credentials: {
-                        username: { label: "Username", type: "text" },
-                        password: {  label: "Password", type: "password" }
+                        phone: { label: "phone", type: "text" },
+                        code: {  label: "code", type: "text" }
                     },
-                authorize: async function (credentials) {
-
+                authorize: async function (credentials,req) {
                     const authResponse = await fetch("http://localhost:8888/login", {
                         method: "POST",
                         headers: {
@@ -19,8 +19,7 @@ export const { handlers, auth } = NextAuth(
                         body: JSON.stringify(credentials),
                     })
                     const data = authResponse.json()
-                    if (authResponse.ok && data) {
-                        console.log(data)
+                    if (authResponse.ok) {
                         // return data.token
                         return data
                     }
@@ -29,23 +28,39 @@ export const { handlers, auth } = NextAuth(
                 }
             )
         ],
-        // session: {
-        //     strategy :"jwt",
-        // },
-        // callbacks:{
-            // async jwt({ token, user, account, profile, isNewUser }) {
-            //     if (user) {
-            //         token.id = user.id;
-            //     }
-            //     return token;
-            // },
-            // session: async ({ session, token, user }) => {
-            //     if (session?.user && token) {
-            //         session.user.id = token.id as string;
-            //     }
-            //     return session;
-            // },
-        // },
+        session: {
+            strategy :"jwt",
+        },
+        callbacks:{
+            async signIn (credentials){
+                // @ts-ignore
+                return credentials?.user?.code == 200;
+            },
+            // @ts-ignore
+            async session  ({ session, token, user }) {
+                // @ts-ignore
+                session.token = token?.accessToken
+                // @ts-ignore
+                session.expires = token?.expire
+
+                // @ts-ignore
+                session.user = token.user
+                return session
+            },
+            async jwt({ token, user}) {
+                if (user) {
+                    // @ts-ignore
+                    token = { accessToken: user.token }
+                    token.user = user
+                    // @ts-ignore
+                    token.expire = user.expire
+                    return token
+                }
+                return token
+                // return null;
+            },
+
+        },
 
     }
 
@@ -55,14 +70,23 @@ export const { handlers, auth } = NextAuth(
 
 declare module "next-auth" {
     interface Session {
-        refreshTokenExpires?: number;
+        refreshTokenExpires?: string;
         accessTokenExpires?: string;
         refreshToken?: string;
         token?: string;
         error?: string;
         user: {
-            id:string,
-            address: string
+            address: string,
         } & DefaultSession["user"];
     }
+    // interface To {
+    //     refreshTokenExpires?: string;
+    //     accessTokenExpires?: string;
+    //     refreshToken?: string;
+    //     token?: string;
+    //     error?: string;
+    //     user: {
+    //         address: string,
+    //     } & DefaultSession["user"];
+    // }
 }
